@@ -1,0 +1,38 @@
+name: Test missing required environment variables
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      # The action uses dotenv-extended with errorOnMissing: true.
+      # Required variables per .env.schema: GITHUB_ACTOR, GITHUB_REPOSITORY,
+      # GITHUB_TOKEN, GIT_EMAIL.
+      # If GIT_EMAIL is missing, the action should fail with a validation error.
+      # We intentionally omit GIT_EMAIL to trigger the missing-variable error.
+      - id: action
+        uses: .
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          # GIT_EMAIL intentionally omitted to trigger errorOnMissing
+          GIT_BRANCH: act-harness
+          FORCE_PUSH: "true"
+          MAX_DAYS: "1"
+          MIN_COMMITS_PER_DAY: "1"
+          MAX_COMMITS_PER_DAY: "1"
+        continue-on-error: true
+
+      - name: Assert action failed due to missing required env var
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "Action outcome: $OUTCOME"
+          # The action should fail because GIT_EMAIL is required but missing.
+          if [ "$OUTCOME" = "failure" ]; then
+            echo "PASS: action correctly failed when required env var is missing"
+          else
+            echo "FAIL: expected failure due to missing GIT_EMAIL, got: $OUTCOME"
+            exit 1
+          fi

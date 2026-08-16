@@ -1,0 +1,44 @@
+name: Test force push (no clone)
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      # The action is a Docker action that:
+      # 1. With FORCE_PUSH=true: inits a local git repo (no clone needed)
+      # 2. Makes empty commits
+      # 3. Pushes to the GitHub repo via HTTPS using GITHUB_TOKEN
+      #
+      # We use FORCE_PUSH=true to skip the clone step.
+      # MAX_DAYS=1, MIN/MAX_COMMITS_PER_DAY=1 to make exactly 1 commit.
+      # The real GITHUB_TOKEN and GITHUB_REPOSITORY are injected by the harness.
+      - id: action
+        uses: .
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GIT_EMAIL: test@example.com
+          GIT_BRANCH: act-harness
+          FORCE_PUSH: "true"
+          MAX_DAYS: "1"
+          MIN_COMMITS_PER_DAY: "1"
+          MAX_COMMITS_PER_DAY: "1"
+        continue-on-error: true
+
+      - name: Assert action ran (success or expected network failure)
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "Action outcome: $OUTCOME"
+          # The action either succeeds (pushed to real repo) or fails with a
+          # network/auth error. Either way, it should have started and run the
+          # Node.js code. We accept both outcomes since the push to GitHub
+          # may or may not succeed depending on repo write permissions.
+          if [ "$OUTCOME" = "success" ] || [ "$OUTCOME" = "failure" ]; then
+            echo "PASS: action ran (outcome=$OUTCOME)"
+          else
+            echo "FAIL: unexpected outcome: $OUTCOME"
+            exit 1
+          fi

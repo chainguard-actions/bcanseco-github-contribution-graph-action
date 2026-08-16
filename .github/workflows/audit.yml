@@ -1,0 +1,26 @@
+name: audit
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+  - cron: '0 12 * * *' # every day at noon
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@61b9e3751b92087fd0b06925ba6dd6314e06f089 # master
+    - run: npm audit --production
+  codeql:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@61b9e3751b92087fd0b06925ba6dd6314e06f089 # master
+    - uses: github/codeql-action/init@3434fbbc53af0fe47685ef3897703b39ef77b5cb # main
+    - uses: github/codeql-action/analyze@3434fbbc53af0fe47685ef3897703b39ef77b5cb # main
