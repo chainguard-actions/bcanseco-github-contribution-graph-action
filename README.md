@@ -13,6 +13,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 | 2.0.0 | [`2.0.0`](https://github.com/chainguard-actions/bcanseco-github-contribution-graph-action/tree/2.0.0) | [`ca9d607`](https://github.com/bcanseco/github-contribution-graph-action/commit/ca9d6077be76a434c8c6762e910d6d12d16554d2) |
 | 2.0.1 | [`2.0.1`](https://github.com/chainguard-actions/bcanseco-github-contribution-graph-action/tree/2.0.1) | [`0550b58`](https://github.com/bcanseco/github-contribution-graph-action/commit/0550b5854eb04ffe3e1159420ebc1e7a73290eda) |
 | 2.0.2 | [`2.0.2`](https://github.com/chainguard-actions/bcanseco-github-contribution-graph-action/tree/2.0.2) | [`74527e7`](https://github.com/bcanseco/github-contribution-graph-action/commit/74527e76090be2a3ff099216fcbbc46a8931497c) |
+| v2 | [`v2`](https://github.com/chainguard-actions/bcanseco-github-contribution-graph-action/tree/v2) | [`74527e7`](https://github.com/bcanseco/github-contribution-graph-action/commit/74527e76090be2a3ff099216fcbbc46a8931497c) |
 
 ## Privacy
 
